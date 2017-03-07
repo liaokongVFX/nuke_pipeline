@@ -1,0 +1,1 @@
+pyside-uic EditPanel.ui -o Ui_EditPanel.py -x

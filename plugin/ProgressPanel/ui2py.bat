@@ -1,0 +1,1 @@
+pyside-uic ProgressPanel.ui -o Ui_ProgressPanel.py -x

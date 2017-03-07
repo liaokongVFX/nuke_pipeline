@@ -1,0 +1,92 @@
+set cut_paste_input [stack 0]
+version 9.0 v5
+BackdropNode {
+ inputs 0
+ name Daliy_Output
+ tile_color 0xaaa062ff
+ label "\n"
+ note_font_size 42
+ selected true
+ xpos -1006
+ ypos 141
+ bdwidth 359
+ bdheight 305
+}
+BackdropNode {
+ inputs 0
+ name Final_Output
+ tile_color 0x56aa88ff
+ label "\n"
+ note_font_size 42
+ selected true
+ xpos -504
+ ypos 144
+ bdwidth 179
+ bdheight 277
+}
+push $cut_paste_input
+Dot {
+ name Dot1
+ selected true
+ xpos -834
+ ypos 171
+}
+set N3dec000 [stack 0]
+Dot {
+ name Dot6
+ selected true
+ xpos -415
+ ypos 171
+}
+Write {
+ file Y:/Render/SJ/Nuke/A007_C019_08149K/A007_C019_08149K_001_3/comp/v0101/SJ_comp_08149K_001_3_v01.mov
+ file_type mov
+ meta_codec ap4h
+ mov32_pixel_format {{0} "default (YCbCrA 8-bit 444 Biased (r408))" "RGBA  8-bit" "YCbCrA 8-bit 444 Biased (r408)" "YCbCr  8-bit 422 (2vuy)"}
+ mov64_codec ap4h
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 40000000
+ mov64_quality_min 2
+ mov64_quality_max 31
+ mov64_gop_size 12
+ mov64_b_frames 0
+ checkHashOnRead false
+ afterRender "exec(open('Z:/Tools/.nuke/writeToRead.py').read());write_to_read()"
+ name Final
+ label "\n\[join \[lrange \[split \[value file] / ] 0 6] /]/\[ lindex \[ split \[ lindex \[split \[value root.name] _ ] \[ expr \[ llength \[split \[value root.name] _ ] ] -1] ] . ] 0 ]/\n"
+ note_font_color 0xff00ffff
+ selected true
+ xpos -449
+ ypos 256
+}
+push $N3dec000
+Reformat {
+ type scale
+ scale 0.5
+ name Reformat1
+ selected true
+ xpos -868
+ ypos 235
+}
+Write {
+ file F:/SJ_comp_08149K_001_3_Wanghf_v0101.mov
+ file_type mov
+ meta_codec ap4h
+ mov32_pixel_format {{0} "default (YCbCrA 8-bit 444 Biased (r408))" "RGBA  8-bit" "YCbCrA 8-bit 444 Biased (r408)" "YCbCr  8-bit 422 (2vuy)"}
+ mov64_codec ap4h
+ mov64_bitrate 20000
+ mov64_bitrate_tolerance 40000000
+ mov64_quality_min 2
+ mov64_quality_max 31
+ mov64_gop_size 12
+ mov64_b_frames 0
+ checkHashOnRead false
+ version 1
+ afterRender "exec(open('Z:/Tools/.nuke/writeToRead.py').read());write_to_read()"
+ name Daliy
+ label "\n\[join \[lrange \[split \[value file] / ] 0 3] /]\n\n\n"
+ note_font_color 0xff00ffff
+ selected true
+ xpos -867
+ ypos 317
+}
