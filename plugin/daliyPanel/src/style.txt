@@ -1,22 +1,16 @@
+/*
+
 QWidget {
     background-image: url(src/bg.jpg);
     color: #fffff8;
 }
+ */
 
-QHeaderView::section {
+/*
+QTableWidget QHeaderView::section {
+
     background-image: url(src/bg.jpg);
-    padding: 4px;
-    border: 1px solid #fffff8;
+    color: #fffff8;
 
-}
-
-
-QTableWidget {
-    background-image: url(src/bg.jpg);
-    gridline-color: #fffff8;
-}
-
-QTableWidget QTableCornerButton::section {
-    background-image: url(src/bg.jpg);
-    border: 1px solid #fffff8;
-}
+ }
+ */

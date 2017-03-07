@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'F:\work\TD\nuke_pipeline\plugin\daliyPanel_V02\ui\daliyPanel.ui'
+# Form implementation generated from reading ui file 'F:\work\TD\nuke_pipeline\plugin\daliyPanel\ui\daliyPanel.ui'
 #
 # Created: Tue Jan 10 13:34:51 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
