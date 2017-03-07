@@ -1,16 +1,3 @@
-/*
-
-QWidget {
-    background-image: url(src/bg.jpg);
-    color: #fffff8;
+*{
+color: #fffff8;
 }
- */
-
-/*
-QTableWidget QHeaderView::section {
-
-    background-image: url(src/bg.jpg);
-    color: #fffff8;
-
- }
- */

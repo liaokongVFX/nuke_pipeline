@@ -26,10 +26,6 @@ class daliyPanel(QMainWindow, Ui_MainWindow):
 		QMainWindow.__init__(self, parent)
 		self.setupUi(self)
 
-		# 风格设置
-		style = open("src/style.txt").read()
-		self.setStyleSheet(style)
-
 		self.daliyTable.setEditTriggers(QAbstractItemView.NoEditTriggers)  # 表格内容禁止修改
 		self.daliyTable.setSortingEnabled(True)  # 设置表格可排序
 		self.daliyTable.verticalHeader().hide()  # 隐藏边栏序号
@@ -54,6 +50,13 @@ class daliyPanel(QMainWindow, Ui_MainWindow):
 		self.set_table_info(self.date)
 
 		self.daliyCalendar.selectionChanged.connect(self.on_daliyCalendar_selectionChanged)
+
+		self.set_style_sheet()
+
+	def set_style_sheet(self):
+		dirs = os.path.dirname(os.path.abspath(__file__))
+		style = open(os.path.join(dirs,"src/style.txt")).read()
+		self.setStyleSheet(style)
 
 	def on_daliyCalendar_selectionChanged(self):
 		"""
@@ -102,8 +105,7 @@ class daliyPanel(QMainWindow, Ui_MainWindow):
 				self.daliyTable.item(r, c).setBackground(QColor(0, 205, 0))  # 设置表格通过那一行内的颜色为绿色
 
 
-if __name__ == "__main__":
-	app = QApplication(sys.argv)
-	daliyPanel = daliyPanel()
-	daliyPanel.show()
-	sys.exit(app.exec_())
+
+def start():
+	start.panel = daliyPanel()
+	start.panel.show()

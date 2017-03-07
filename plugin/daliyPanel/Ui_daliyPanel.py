@@ -52,13 +52,3 @@ class Ui_MainWindow(object):
 														   "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">在上方点击要查看的日期，即会显示所查看日期当天镜头提交的相关信息。</p></body></html>",
 														   None, QtGui.QApplication.UnicodeUTF8))
 
-
-if __name__ == "__main__":
-	import sys
-
-	app = QtGui.QApplication(sys.argv)
-	MainWindow = QtGui.QMainWindow()
-	ui = Ui_MainWindow()
-	ui.setupUi(MainWindow)
-	MainWindow.show()
-	sys.exit(app.exec_())
