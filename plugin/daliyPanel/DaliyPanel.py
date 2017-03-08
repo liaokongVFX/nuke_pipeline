@@ -55,7 +55,7 @@ class daliyPanel(QMainWindow, Ui_MainWindow):
 
 	def set_style_sheet(self):
 		dirs = os.path.dirname(os.path.abspath(__file__))
-		style = open(os.path.join(dirs,"src/style.txt")).read()
+		style = open(os.path.join(dirs, "src/style.txt")).read()
 		self.setStyleSheet(style)
 
 	def on_daliyCalendar_selectionChanged(self):
@@ -103,7 +103,6 @@ class daliyPanel(QMainWindow, Ui_MainWindow):
 		for r in pass_num:
 			for c in xrange(0, self.daliyTable.columnCount()):
 				self.daliyTable.item(r, c).setBackground(QColor(0, 205, 0))  # 设置表格通过那一行内的颜色为绿色
-
 
 
 def start():

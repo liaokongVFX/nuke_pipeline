@@ -184,14 +184,10 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 			QtGui.QMessageBox.information(self, u"提示", u"请选择要导出excel的项目.")
 
 
-if __name__ == "__main__":
-	app = QtGui.QApplication(sys.argv)
+def start():
+	start.pplanel = ProgressPanel()
+	start.pplanel.show()
 
-	ProgressPanel = ProgressPanel()
-	ProgressPanel.show()
-
-	if ProgressPanel.exec_() == QtGui.QDialog.Accepted:
-		EditPanel = EditPanel()
-		EditPanel.show()
-
-		app.exec_()
+	if start.pplanel.exec_() == QtGui.QDialog.Accepted:
+		start.EPanel = EditPanel()
+		start.EPanel.show()
