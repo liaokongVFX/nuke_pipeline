@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'EditPanel.ui'
 #
-# Created: Mon Mar 06 12:59:44 2017
+# Created: Wed Mar 08 13:44:48 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -44,7 +44,7 @@ class Ui_EditPanel(object):
         QtCore.QMetaObject.connectSlotsByName(EditPanel)
 
     def retranslateUi(self, EditPanel):
-        EditPanel.setWindowTitle(QtGui.QApplication.translate("EditPanel", "Grader Panel", None, QtGui.QApplication.UnicodeUTF8))
+        EditPanel.setWindowTitle(QtGui.QApplication.translate("EditPanel", "Progress Panel", None, QtGui.QApplication.UnicodeUTF8))
         self.client_pass.setText(QtGui.QApplication.translate("EditPanel", "客户通过", None, QtGui.QApplication.UnicodeUTF8))
         self.client_no_pass.setText(QtGui.QApplication.translate("EditPanel", "暂未通过", None, QtGui.QApplication.UnicodeUTF8))
 

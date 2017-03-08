@@ -1,3 +1,5 @@
 *{
 color: #fffff8;
+font-family:宋体;
+font-size:12px;
 }

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'ProgressPanel.ui'
 #
-# Created: Tue Mar 07 17:37:02 2017
+# Created: Wed Mar 08 13:44:44 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -51,7 +51,7 @@ class Ui_ProgressPanel(object):
         QtCore.QMetaObject.connectSlotsByName(ProgressPanel)
 
     def retranslateUi(self, ProgressPanel):
-        ProgressPanel.setWindowTitle(QtGui.QApplication.translate("ProgressPanel", "Grader Panel", None, QtGui.QApplication.UnicodeUTF8))
+        ProgressPanel.setWindowTitle(QtGui.QApplication.translate("ProgressPanel", "Progress Panel", None, QtGui.QApplication.UnicodeUTF8))
         self.refurbish_btn.setText(QtGui.QApplication.translate("ProgressPanel", "刷新", None, QtGui.QApplication.UnicodeUTF8))
         self.save_excel_btn.setText(QtGui.QApplication.translate("ProgressPanel", "导出EXCEL", None, QtGui.QApplication.UnicodeUTF8))
         self.login_btn.setText(QtGui.QApplication.translate("ProgressPanel", "编辑", None, QtGui.QApplication.UnicodeUTF8))

@@ -29,6 +29,16 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 		self.detail_table.verticalHeader().hide()  # 隐藏边栏序号
 		self.detail_table.horizontalHeader().setStretchLastSection(True)  # 设置表格最后对其到边缘
 		self.detail_table.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)  # 设置选择一行
+
+		self.setStyleSheet("""
+			*{color:#fffff8;
+			font-family:宋体;
+			font-size:12px;}
+			QListWidget{
+			font-size:17px;
+			}
+		""")
+
 		# 设置点击表头排序
 		self.detail_table.setSortingEnabled(True)
 		self.detail_table.sortByColumn(0, QtCore.Qt.AscendingOrder)
@@ -37,7 +47,7 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 		for project_name in config.connect_mongo_progress.distinct("project"):
 			self.project_list.addItem(project_name.decode("utf8"))
 
-		self.project_list.setStyleSheet("QListWidget::item {color:#0b16ae;}")
+		# self.project_list.setStyleSheet("QListWidget::item {color:#0b16ae;}")
 
 		# 设置 detail_table 头部信息
 		self.db_progress_dataName = config.db_progress_dataName
@@ -82,7 +92,7 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 
 		for r in pass_num:
 			for c in xrange(0, self.detail_table.columnCount()):
-				self.detail_table.item(r, c).setBackground(QtGui.QColor(255, 255, 0))
+				self.detail_table.item(r, c).setBackground(QtGui.QColor(255, 205, 2))
 
 		# 设置客户通过颜色
 		client_pass_num = []
@@ -97,7 +107,7 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 
 		for r in client_pass_num:
 			for c in xrange(0, self.detail_table.columnCount()):
-				self.detail_table.item(r, c).setBackground(QtGui.QColor(0, 255, 0))
+				self.detail_table.item(r, c).setBackground(QtGui.QColor(105, 175, 115))
 
 		# 进度条设置
 		self.progressBar.setMinimum(0)
