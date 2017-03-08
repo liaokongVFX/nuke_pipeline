@@ -1,0 +1,1 @@
+pyside-uic Ui_projectPanel.ui -o Ui_projectPanel.py -x
