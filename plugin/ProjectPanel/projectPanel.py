@@ -41,10 +41,8 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 		self.file_list.itemDoubleClicked.connect(self.file_double_clicked)
 
 		self.creat_btn.clicked.connect(self.creat_btn_clicked)
-		# todo 导入按钮实现
 		self.import_btn.clicked.connect(self.import_btn_clicked)
 		self.open_btn.clicked.connect(self.open_btn_clicked)
-		# todo 导入素材按钮的实现
 		self.open_dir_btn.clicked.connect(self.open_dir_btn_clicked)
 
 	def scene_list_show(self):
@@ -120,7 +118,6 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 				seq_name = self.shot_path + "/" + self.shot_list.currentItem().text() + "/" + \
 						   seq_name_list[0].split(".")[0] + ".%0{}d".format(frame_len) + file_ext
 
-			# todo 设置工程的帧范围
 			read_node = nuke.createNode("Read")
 			read_node["file"].setValue(seq_name.replace("\\", "/"))
 			read_node["first"].setValue(int(first_frame))
