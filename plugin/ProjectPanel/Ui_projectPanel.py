@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'Ui_projectPanel.ui'
 #
-# Created: Wed Mar 08 17:31:40 2017
+# Created: Thu Mar 09 19:38:52 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -60,7 +60,13 @@ class Ui_projectPanel(object):
         self.horizontalLayout_2.addWidget(self.open_dir_btn)
         self.verticalLayout_5.addLayout(self.horizontalLayout_2)
         self.splitter = QtGui.QSplitter(projectPanel)
+        self.splitter.setStyleSheet("QSplitter::handle {\n"
+"    background-color: rgba(0, 0, 0,0);\n"
+"\n"
+"}")
+        self.splitter.setLineWidth(0)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.splitter.setHandleWidth(5)
         self.splitter.setObjectName("splitter")
         self.layoutWidget = QtGui.QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
