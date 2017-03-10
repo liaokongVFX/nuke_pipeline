@@ -5,4 +5,4 @@ __author__ = 'liaokong'
 import nuke
 import projectPanel
 
-nuke.menu("Nuke").addMenu("nuke_pipeline").addCommand("projectPanel", "projectPanel.start()", "Shift+q")
+nuke.menu("Nuke").addMenu("pipeline").addCommand("projectPanel", "projectPanel.start()", "Shift+q")

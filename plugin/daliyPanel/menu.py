@@ -5,4 +5,4 @@ __author__ = 'liaokong'
 import nuke
 import DaliyPanel
 
-nuke.menu("Nuke").addMenu("nuke_pipeline").addCommand("daliyPanel", "DaliyPanel.start()")
+nuke.menu("Nuke").addMenu("pipeline").addCommand("daliyPanel", "DaliyPanel.start()")

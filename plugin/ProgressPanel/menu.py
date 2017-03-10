@@ -5,4 +5,4 @@ __author__ = 'liaokong'
 import nuke
 import ProgressPanel
 
-nuke.menu("Nuke").addMenu("nuke_pipeline").addCommand("progressPanel", "ProgressPanel.start()")
+nuke.menu("Nuke").addMenu("pipeline").addCommand("progressPanel", "ProgressPanel.start()")

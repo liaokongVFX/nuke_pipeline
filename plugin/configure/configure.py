@@ -39,3 +39,7 @@ db_progress_dataName = OrderedDict(
 	 (u"制作人员", u"user_name"), (u"内部审核", u"pass_value"), (u"客户反馈", u"client_feed_back"), (u"阶段完成日期", u"date")])
 
 # TODO: 或许需要一个 artist 和 user 的键值对
+
+
+# 自动保存文件个数
+number_of_backups = 5
