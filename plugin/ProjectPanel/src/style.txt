@@ -1,0 +1,12 @@
+*{
+color: #fffff8;
+font-family:宋体;
+font-size:12px;
+}
+QListWidget::Item {
+height:17px;
+}
+
+QListWidget::Item:hover{
+background-color: rgb(41, 189, 139);
+}

@@ -34,11 +34,18 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 		self.category_comb.setFixedSize(105, 27)
 		self.lineEdit.setText(self.root_path)
 
+		self.setStyleSheet(self.get_style("style"))
+
+		# 给工程列表添加右键菜单功能
+		self.file_list.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.file_list.customContextMenuRequested.connect(self.file_path_context_menu)
+
 		# project 显示对应的内容
 		self.project_list.addItems([x.decode("gbk") for x in os.listdir(self.root_path) if
 									os.path.isdir(os.path.join(self.root_path, x)) == True])
 		self.project_list.currentItemChanged.connect(self.scene_list_show)
 		self.file_list.itemDoubleClicked.connect(self.file_double_clicked)
+		self.file_list.itemDoubleClicked.connect(self.close)
 
 		self.creat_btn.clicked.connect(self.creat_btn_clicked)
 		self.import_btn.clicked.connect(self.import_btn_clicked)
@@ -132,11 +139,9 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 		self.final_file_path = os.path.join(self.project_root_path, self.project_list.currentItem().text(), "Nuke",
 											self.scene_list.currentItem().text(), self.shot_list.currentItem().text(),
 											self.category_comb.currentText()).replace("\\", "/")
-		try:
-			nuke.scriptOpen(self.final_file_path + "/" + self.file_list.currentItem().text())
-			self.close()
-		except:
-			QtGui.QMessageBox.information(self, u"提示", u"请选择要打开的文件！")
+
+		nuke.scriptOpen(self.final_file_path + "/" + self.file_list.currentItem().text())
+		self.close()
 
 	def open_dir_btn_clicked(self):
 		"""打开素材路径"""
@@ -145,6 +150,27 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 	def file_double_clicked(self):
 		"""双击打开要使用的文件"""
 		self.open_btn_clicked()
+
+	def file_path_context_menu(self):
+		"""在工程list中右键打开对应的工程目录"""
+		popMenu = QtGui.QMenu()
+		popMenu.setStyleSheet(self.get_style("menu_style"))
+		add_action = QtGui.QAction(self)
+		add_action.setText(u"打开工程目录")
+		add_action.triggered.connect(self.open_file_path_button)
+		popMenu.addAction(add_action)
+		popMenu.exec_(QtGui.QCursor.pos())
+
+	def open_file_path_button(self):
+		try:
+			os.startfile(self.file_path)
+		except:
+			QtGui.QMessageBox.information(self, u"提示", u"请选择要打的工程镜头名称~")
+
+	def get_style(self, style_name):
+		dirs = os.path.dirname(os.path.abspath(__file__))
+		style = open(os.path.join(dirs, "src/%s.txt" % style_name)).read()
+		return style
 
 
 def start():

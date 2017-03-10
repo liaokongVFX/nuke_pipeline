@@ -1,0 +1,13 @@
+*{
+color: #fffff8;
+font-family:宋体;
+font-size:12px;
+}
+QMenu::item {
+    padding: 5px 25px 5px 25px;
+    margin-left: 1px;
+    border: 1px solid transparent;
+}
+QMenu::item:selected {
+    background-color: #ffcd02;
+}
