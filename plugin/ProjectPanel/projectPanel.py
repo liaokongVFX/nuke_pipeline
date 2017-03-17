@@ -4,6 +4,7 @@ __author__ = 'liaokong'
 
 import sys
 import os
+import time
 
 from PySide import QtGui
 from PySide import QtCore
@@ -26,7 +27,7 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 		# 设置 splitter 中的list默认宽度
 		self.splitter.setSizes((10, 10, 125, 275))
 
-		self.setFixedSize(1005, 675)
+		self.setFixedSize(1075, 675)
 		self.creat_btn.setFixedSize(215, 27)
 		self.import_btn.setFixedSize(215, 27)
 		self.open_btn.setFixedSize(215, 27)
@@ -45,7 +46,6 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 									os.path.isdir(os.path.join(self.root_path, x)) == True])
 		self.project_list.currentItemChanged.connect(self.scene_list_show)
 		self.file_list.itemDoubleClicked.connect(self.file_double_clicked)
-		self.file_list.itemDoubleClicked.connect(self.close)
 
 		self.creat_btn.clicked.connect(self.creat_btn_clicked)
 		self.import_btn.clicked.connect(self.import_btn_clicked)
@@ -82,7 +82,24 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 										  self.scene_list.currentItem().text(), self.shot_list.currentItem().text(),
 										  self.category_comb.currentText())
 
-			self.file_list.addItems([x.decode("utf8") for x in os.listdir(self.file_path)])
+			month = {"Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04", "May": "05", "Jun": "06", "Jul": "07",
+						"Aug": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12"}
+
+			file_name_list = []
+			file_list = [x for x in os.listdir(self.file_path) if os.path.splitext(x)[1] == ".nk"]
+
+			# 给file list里面显示的名字加上修改的日期显示
+			for file_name in file_list:
+				(mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(
+					os.path.join(self.file_path, file_name).replace("\\", "/"))
+
+				modify_time_list = time.ctime(mtime).split(" ")[1:]
+				modify_time = "%s/%s/%s %s" % (
+					modify_time_list[-1], month[modify_time_list[0]], modify_time_list[1], modify_time_list[2])
+				file_name = file_name + ("  %s" % modify_time)
+				file_name_list.append(file_name.decode("utf8"))
+
+			self.file_list.addItems(file_name_list)
 		except:
 			pass
 
@@ -136,12 +153,12 @@ class projectPanel(QtGui.QDialog, Ui_projectPanel):
 
 	def open_btn_clicked(self):
 		"""打开所选择的工程按钮"""
+		self.close()
 		self.final_file_path = os.path.join(self.project_root_path, self.project_list.currentItem().text(), "Nuke",
 											self.scene_list.currentItem().text(), self.shot_list.currentItem().text(),
 											self.category_comb.currentText()).replace("\\", "/")
 
-		nuke.scriptOpen(self.final_file_path + "/" + self.file_list.currentItem().text())
-		self.close()
+		nuke.scriptOpen(self.final_file_path + "/" + self.file_list.currentItem().text().split("  ")[0])
 
 	def open_dir_btn_clicked(self):
 		"""打开素材路径"""
