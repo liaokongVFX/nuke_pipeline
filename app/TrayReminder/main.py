@@ -1,16 +1,22 @@
 # -*- coding:utf-8 -*-
-__date__ = '2017/3/15 18:49'
+__date__ = '2017/3/16 17:32'
 __author__ = 'liaokong'
 
-import threading
+import sys
 
 from PySide import QtGui
 
 from TrayReminder import TrayReminderServer
 
-def run_tuopan():
+from tuopan import TuoPan
+
+def main():
+	app = QtGui.QApplication(sys.argv)
 	POST = 5000
 	# todo POST 需要写到配置文件中
+
+	tuopan=TuoPan()
+	tuopan.show()
 
 	simple = TrayReminderServer("", POST)
 	simple.connect()
@@ -19,9 +25,8 @@ def run_tuopan():
 		print u"等待连接建立..."
 		simple.receive()
 
-
-a = threading.Thread(target=run_tuopan)
-a.start()
+	app.exec_()
 
 
-# todo 未完成
+if __name__ == '__main__':
+	main()
