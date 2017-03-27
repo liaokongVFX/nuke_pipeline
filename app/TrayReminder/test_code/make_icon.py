@@ -7,6 +7,7 @@ import win32gui
 import win32con
 import win32api
 
+
 # todo 把win32库打包过来
 
 # 当拖入桌面的快捷方式生成icon图标需要的代码
@@ -50,4 +51,3 @@ link_path = u"c:/QQ影音.lnk"
 save_path = "save.bmp"
 
 make_icon(link_path, save_path)
-
