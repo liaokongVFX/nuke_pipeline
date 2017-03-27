@@ -1,0 +1,18 @@
+[
+  {
+    "name":"favorite",
+    "tool_list":[
+    "tool_a",
+    "tool_b",
+    "tool_c"
+    ]
+  },
+  {
+    "name":"rig",
+    "tool_list":[
+    "tool_e",
+    "tool_f",
+    "tool_g"
+    ]
+  }
+]
