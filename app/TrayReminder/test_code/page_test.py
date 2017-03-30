@@ -169,19 +169,30 @@ class AddToolItem(QtGui.QListWidgetItem):
 		for link in links:
 			if os.path.splitext(link)[-1] == ".exe" or os.path.splitext(link)[-1] == ".lnk":
 				# todo: 添加app时先判断拖入的exe是否已经存在，如果已存在则不创建并给出提示
-				get_true_path = self.__get_lnk_path(link)
-				if self.make_icon(get_true_path, "icon/%s.ico" % link.split("/")[-1].split(".")[0]):
-					self.setText(link.split("/")[-1].split(".")[0].replace(" ", "\n"))
-					icon = QtGui.QIcon(
-						os.path.dirname(os.path.abspath(__file__)) + "/icon/%s.ico" % link.split("/")[-1].split(".")[0])
-					self.setIcon(icon)
+				with open(TestPage.conf_path) as conf_file:
+					conf_str = conf_file.read()
+				get_true_path = str(unicode(QtCore.QString(self.__get_lnk_path(link)).toUtf8(), 'utf-8', 'ignore'))
 
-					self.setSizeHint(QtCore.QSize(80, 90))
+				print type(conf_str), type(get_true_path)
 
-					self.write_json(self.widget_name, link.split("/")[-1].split(".")[0],
-									"icon/%s.ico" % link.split("/")[-1].split(".")[0], get_true_path)
+				# todo: 判断这里有问题，明天继续弄
+				if conf_str.find(get_true_path) == -1:
+
+					if self.make_icon(get_true_path, "icon/%s.ico" % link.split("/")[-1].split(".")[0]):
+						self.setText(link.split("/")[-1].split(".")[0].replace(" ", "\n"))
+						icon = QtGui.QIcon(os.path.dirname(os.path.abspath(__file__)) + "/icon/%s.ico" %
+										   link.split("/")[-1].split(".")[0])
+						self.setIcon(icon)
+
+						self.setSizeHint(QtCore.QSize(80, 90))
+
+						self.write_json(self.widget_name, link.split("/")[-1].split(".")[0],
+										"icon/%s.ico" % link.split("/")[-1].split(".")[0], get_true_path)
+					else:
+						QtGui.QMessageBox.information(None, u"提示", u"请拖入exe文件的快捷方式")
+
 				else:
-					QtGui.QMessageBox.information(None, u"提示", u"请拖入exe文件的快捷方式")
+					QtGui.QMessageBox.information(None, u"提示", u"程序已添加，请不要重复添加")
 
 			else:
 				QtGui.QMessageBox.information(None, u"提示", u"请拖入快捷方式或者exe文件")
@@ -209,8 +220,6 @@ class AddToolItem(QtGui.QListWidgetItem):
 					"app_list": app_list
 				}
 				apend_dict.insert(index_page, new_app_list)
-
-		print apend_dict
 
 		with open(TestPage.conf_path, "w") as json_file:
 			json_str = json.dumps(apend_dict, ensure_ascii=False, indent=2)
