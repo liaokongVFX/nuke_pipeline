@@ -1,0 +1,50 @@
+*{
+color: #fffff8;
+font-size:13px;
+font-family:宋体;
+}
+QListWidget::Item:hover{
+	background-color: rgb(41, 189, 139);
+}
+
+QListWidget::Item:selected{
+	background-color: #ffcd02;
+}
+
+QPushButton#add{
+    border: 1px solid rgb(41, 189, 139);
+    border-radius: 5px;
+    min-height: 2em;
+}
+
+QPushButton#add:hover{
+    border: 2px solid #fffff0;
+	color: rgb(41, 189, 139);
+    border-radius: 7px;
+    min-height: 2em;
+}
+
+QPushButton#up{
+    image:url(C:/Users/Wanghf/.nuke/CommonToolkit/src/up.png);
+    border-radius: 1px;
+    min-height: 1.3em;
+}
+QPushButton#up:hover{
+
+    border-radius: 1px;
+    border: 2px solid #fffff0;
+	color: rgb(41, 189, 139);
+
+
+}
+QPushButton#down{
+    image:url(C:/Users/Wanghf/.nuke/CommonToolkit/src/down.png);
+    border-radius: 1px;
+    min-height: 1.3em;
+}
+QPushButton#down:hover{
+
+    border-radius: 1px;
+    border: 2px solid #fffff0;
+	color: rgb(41, 189, 139);
+}
