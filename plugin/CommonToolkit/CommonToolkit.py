@@ -238,24 +238,27 @@ class ToolsListWidget(QtGui.QListWidget):
 		self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 		self.setAcceptDrops(True)
 
-		self.old_item_index.connect(self.old_index_sig)
+		# self.old_item_index.connect(self.old_index_sig)
 		# self.drop_item_sig.connect(self.drag_leave_create)
 
 	def dragEnterEvent(self, event):
 		"""将所选择的item的index发射出去"""
 		super(ToolsListWidget, self).dragEnterEvent(event)
 
-		self.old_item_index.emit(str(self.currentRow()))
+		global old_index
+		self.old_index = self.currentRow()
+
+		# self.old_item_index.emit(str(self.currentRow()))
 
 	def dragMoveEvent(self, event):
 		"""修改拖拽时的minedata数据"""
 		tools_list = self.parent().read_json()
 		event.mimeData().setText(tools_list[self.currentRow()].get("command"))
 
-	def old_index_sig(self):
-		old_index_row = self.sender().currentRow()
-		global old_index
-		self.old_index = old_index_row
+	# def old_index_sig(self):
+	# 	old_index_row = self.sender().currentRow()
+	# 	global old_index
+	# 	self.old_index = old_index_row
 
 	def dropEvent(self, event):
 		"""预设通过拖拽的方式排序"""
