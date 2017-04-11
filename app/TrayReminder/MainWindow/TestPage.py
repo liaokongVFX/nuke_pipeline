@@ -5,7 +5,6 @@ __author__ = 'liaokong'
 import sys
 import os
 import json
-import glob
 
 from PyQt4 import QtGui
 from PyQt4 import QtCore
@@ -60,6 +59,14 @@ class TestPage(QtGui.QWidget):
 
 			page_button = QtGui.QPushButton(page_name)
 			page_button.setObjectName("%s_page_btn" % page_name)
+			page_button.setStyleSheet("""
+										QPushButton{
+											border: 2px solid rgb(41, 189, 139);
+											border-radius: 5px;
+											min-height: 2em;
+										}
+										""")
+
 			self.button_layout.addWidget(page_button)
 
 			page_widget = ToolListWgt(page_name)
@@ -89,16 +96,66 @@ class ToolListWgt(QtGui.QListWidget):
 
 		self.setObjectName("%s_page_wgt" % obj_name)
 		self.setViewMode(self.IconMode)
+		self.setFrameShape(QtGui.QFrame.NoFrame)
 		self.setDragEnabled(False)
 		self.setDefaultDropAction(QtCore.Qt.MoveAction)
 		self.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
 		self.setAcceptDrops(True)
 
 		self.itemDoubleClicked.connect(self.double_clicked)
-		self.itemChanged.connect(self.item_gaibian)
 
-	def item_gaibian(self):
-		print "gaibianla"
+		self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+		self.connect(self, QtCore.SIGNAL("customContextMenuRequested(QPoint)"), self.item_right_clicked)
+
+	def item_right_clicked(self, QPos):
+		if self.currentItem():
+			self.list_menu = QtGui.QMenu()
+			menu_item = self.list_menu.addAction(u"删除")
+			self.connect(menu_item, QtCore.SIGNAL("triggered()"), self.menu_item_clicked)
+			parent_position = self.mapToGlobal(QtCore.QPoint(0, 0))
+			self.list_menu.move(parent_position + QPos)
+			self.list_menu.show()
+
+	def menu_item_clicked(self):
+		current_item_name = str(self.currentItem().text()).replace("\n", " ")
+
+		button = QtGui.QMessageBox.question(self, u"提示",
+											u"是否删除%s" % current_item_name,
+											QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel,
+											QtGui.QMessageBox.Ok)
+		if button == QtGui.QMessageBox.Ok:
+			# 删除要删的item
+			self.takeItem(self.row(self.currentItem()))
+
+			# 删除json中对应的数据
+			self.write_delete_json(current_item_name, self.objectName())
+
+	def write_delete_json(self, current_item_name, widget_name):
+		"""删除json中对应的数据"""
+		apend_dict = read_json(TestPage.conf_path)
+
+		current_item_name = unicode(QtCore.QString(current_item_name).toUtf8(), 'utf-8', 'ignore')
+		widget_name = unicode(QtCore.QString(widget_name).toUtf8(), 'utf-8', 'ignore').split("_")[0]
+
+		for index_item, current_item in enumerate(apend_dict):
+			if current_item.get("name") == widget_name:
+				app_list = current_item.get("app_list")
+				for index_app, item_app in enumerate(app_list):
+					if item_app.get("app_name") == current_item_name:
+						app_list.pop(index_app)
+						new_app_list = app_list
+
+						new_page_list = {
+							"name": widget_name,
+							"app_list": new_app_list
+						}
+
+						apend_dict.pop(index_item)
+						apend_dict.insert(index_item, new_page_list)
+
+		with open(TestPage.conf_path, "w") as json_file:
+			json_str = json.dumps(apend_dict, ensure_ascii=False, indent=2)
+			json_file.write(json_str)
 
 	def double_clicked(self):
 		"""打开程序"""
@@ -146,13 +203,6 @@ class ToolItem(QtGui.QListWidgetItem):
 			icon = QtGui.QIcon(main_icon_path)
 			self.setIcon(icon)
 
-		# 找到按钮功能
-		# self.script_path = self.get_script_path()
-
-		# todo：添加右键菜单
-		#
-		# 右键菜单添加删除功能
-
 	@staticmethod
 	def get_icon_path(tool_name):
 		main_icon_name = tool_name.get("app_ico")
@@ -168,16 +218,18 @@ class AddToolItem(QtGui.QListWidgetItem):
 
 		for link in links:
 			if os.path.splitext(link)[-1] == ".exe" or os.path.splitext(link)[-1] == ".lnk":
-				# todo: 添加app时先判断拖入的exe是否已经存在，如果已存在则不创建并给出提示
-				with open(TestPage.conf_path) as conf_file:
-					conf_str = conf_file.read()
-				get_true_path = str(unicode(QtCore.QString(self.__get_lnk_path(link)).toUtf8(), 'utf-8', 'ignore'))
+				app_dict = read_json(TestPage.conf_path)
+				for current_page in app_dict:
+					if current_page.get("name") == self.widget_name:
+						self.current_page_app = str(current_page.get("app_list"))
 
-				print type(conf_str), type(get_true_path)
+				get_true_path = self.__get_lnk_path(link).encode("utf-8")
+				get_true_name = get_true_path.split("\\")[-1]
 
-				# todo: 判断这里有问题，明天继续弄
-				if conf_str.find(get_true_path) == -1:
+				# 判断拖入的程序是否以存在
+				if get_true_name not in self.current_page_app:
 
+					# 判断拖入的程序是否是exe程序
 					if self.make_icon(get_true_path, "icon/%s.ico" % link.split("/")[-1].split(".")[0]):
 						self.setText(link.split("/")[-1].split(".")[0].replace(" ", "\n"))
 						icon = QtGui.QIcon(os.path.dirname(os.path.abspath(__file__)) + "/icon/%s.ico" %
