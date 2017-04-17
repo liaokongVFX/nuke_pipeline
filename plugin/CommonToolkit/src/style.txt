@@ -24,6 +24,20 @@ QPushButton#add:hover{
     min-height: 2em;
 }
 
+QPushButton#add_py{
+    border: 1px solid rgb(41, 189, 139);
+    border-radius: 5px;
+    min-height: 1.5em;
+}
+
+QPushButton#add_py:hover{
+    border: 2px solid #fffff0;
+	color: rgb(41, 189, 139);
+    border-radius: 7px;
+    min-height: 1.5em;
+}
+
+
 QPushButton#up{
     image:url(C:/Users/Wanghf/.nuke/CommonToolkit/src/up.png);
     border-radius: 1px;

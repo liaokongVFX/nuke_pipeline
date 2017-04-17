@@ -12,14 +12,14 @@ from PySide import QtCore
 import nuke
 import nukescripts
 
+from config import config_dir, config_path, write_json, read_json, get_style
+from AddPyWin import AddPyWin
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
 class CommonToolkit(QtGui.QWidget):
-	config_dir = os.path.join(os.path.expanduser('~'), "comToolkit")
-	config_path = os.path.join(config_dir, "config.json")
-
 	def __init__(self, parent=None):
 		super(CommonToolkit, self).__init__(parent)
 
@@ -27,10 +27,15 @@ class CommonToolkit(QtGui.QWidget):
 
 		self.v_layout = QtGui.QVBoxLayout(self)
 		self.add_btn = QtGui.QPushButton(self)
-		self.add_btn.setText(u"添加")
+		self.add_btn.setText(u"添加预设")
 		self.add_btn.setObjectName("add")
 
+		self.py_btn = QtGui.QPushButton(self)
+		self.py_btn.setText(u"添加脚本")
+		self.py_btn.setObjectName("add_py")
+
 		self.v_layout.addWidget(self.add_btn)
+		self.v_layout.addWidget(self.py_btn)
 		self.tool_list = ToolsListWidget()
 		self.v_layout.addWidget(self.tool_list)
 		# self.h_layout = QtGui.QHBoxLayout(self)
@@ -49,6 +54,7 @@ class CommonToolkit(QtGui.QWidget):
 		self.init_tools_list()
 
 		self.add_btn.clicked.connect(self.add_btn_clicked)
+		self.py_btn.clicked.connect(self.py_btn_clicked)
 		# self.up_btn.clicked.connect(self.up_btn_clicked)
 		# self.down_btn.clicked.connect(self.down_btn_clicked)
 		self.tool_list.doubleClicked.connect(self.list_double_clicked)
@@ -57,7 +63,7 @@ class CommonToolkit(QtGui.QWidget):
 		self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
 		self.connect(self, QtCore.SIGNAL("customContextMenuRequested(QPoint)"), self.item_right_clicked)
 
-		self.setStyleSheet(self.get_style("style"))
+		self.setStyleSheet(get_style("style"))
 
 	def item_right_clicked(self, QPos):
 		# 右键菜单
@@ -79,29 +85,25 @@ class CommonToolkit(QtGui.QWidget):
 											QtGui.QMessageBox.Ok)
 		if button == QtGui.QMessageBox.Ok:
 			# 删除json中对应的内容
-			tools_list = self.read_json()
+			tools_list = read_json()
 			current_index = self.tool_list.currentRow()
-			if tools_list[current_index].get("type") == "node":
-				tools_list.pop(current_index)
-				self.write_json(tools_list)
-			else:
-				toolset_path = tools_list[current_index].get("command")
-				os.remove(toolset_path)
-				tools_list.pop(current_index)
-				self.write_json(tools_list)
+			toolset_path = tools_list[current_index].get("command")
+			os.remove(toolset_path)
+			tools_list.pop(current_index)
+			write_json(tools_list)
 
 			# 删除要删的item
 			self.tool_list.takeItem(self.tool_list.row(self.tool_list.currentItem()))
 
 	def init_tools_list(self):
-		if os.path.isdir(self.config_dir) == False:
-			os.mkdir(self.config_dir)
+		if os.path.isdir(config_dir) == False:
+			os.mkdir(config_dir)
 
-		if os.path.isfile(self.config_path) == False:
-			with open(self.config_path, "w") as write_file:
+		if os.path.isfile(config_path) == False:
+			with open(config_path, "w") as write_file:
 				write_file.write("[]")
 
-		for tool in self.read_json():
+		for tool in read_json():
 			tool_item = QtGui.QListWidgetItem(tool.get("name"))
 			tool_item.setTextAlignment(QtCore.Qt.AlignCenter)
 			tool_item.setSizeHint(QtCore.QSize(tool_item.sizeHint().width(), 25))
@@ -112,37 +114,12 @@ class CommonToolkit(QtGui.QWidget):
 
 		existItem = False
 
-		if len(current_node) == 1:
-			if self.tool_list.count() == 0:
-				existItem = True
-
+		if len(current_node) > 0:
+			if len(current_node) == 1:
+				tool_name = nuke.getInput(u'请输入预设名字:', current_node[0].name()[:-1])
 			else:
-				for list_num in xrange(self.tool_list.count()):
-					if self.tool_list.item(list_num).text() == current_node[0].name()[:-1]:
-						QtGui.QMessageBox.information(self, u"提示", u"您选的节点已添加过了，请不要重复添加")
-						existItem = False
-						break
-					else:
-						existItem = True
+				tool_name = nuke.getInput(u'请输入预设名字:')
 
-			if existItem:
-				tool_item = QtGui.QListWidgetItem(current_node[0].name()[:-1])
-				tool_item.setTextAlignment(QtCore.Qt.AlignCenter)  # 设置item居中
-				tool_item.setSizeHint(QtCore.QSize(tool_item.sizeHint().width(), 25))  # 设置item高度
-				self.tool_list.addItem(tool_item)
-
-				# 写入json
-				tools_list = self.read_json()
-				current_tool = {"name": current_node[0].name()[:-1],
-								"type": "node",
-								"command": current_node[0].name()[:-1]}
-				tools_list.append(current_tool)
-				self.write_json(tools_list)
-
-		elif len(current_node) == 0:
-			QtGui.QMessageBox.information(self, u"提示", u"请选择节点")
-		else:
-			tool_name = nuke.getInput(u'请输入预设名字:')
 			if tool_name:
 				if self.tool_list.count() == 0:
 					existItem = True
@@ -158,21 +135,24 @@ class CommonToolkit(QtGui.QWidget):
 
 				if existItem:
 					tool_item = QtGui.QListWidgetItem(tool_name)
-					tool_item.setTextAlignment(QtCore.Qt.AlignCenter)
-					tool_item.setSizeHint(QtCore.QSize(tool_item.sizeHint().width(), 25))
+					tool_item.setTextAlignment(QtCore.Qt.AlignCenter)  # 设置item居中
+					tool_item.setSizeHint(QtCore.QSize(tool_item.sizeHint().width(), 25))  # 设置item高度
 					self.tool_list.addItem(tool_item)
 
 					# 保存成预设文件
-					toolset_path = os.path.join(self.config_dir, "%s.nk" % tool_name)
+					toolset_path = os.path.join(config_dir, "%s.nk" % tool_name)
 					nuke.nodeCopy(toolset_path.encode("gbk"))
 
 					# 写入json
-					tools_list = self.read_json()
+					tools_list = read_json()
 					current_tool = {"name": tool_name,
 									"type": "tool_set",
 									"command": toolset_path.replace("\\", "/")}
 					tools_list.append(current_tool)
-					self.write_json(tools_list)
+					write_json(tools_list)
+
+		else:
+			QtGui.QMessageBox.information(self, u"提示", u"请选择节点")
 
 	# def up_btn_clicked(self):
 	# 	current_index = self.tool_list.currentRow()
@@ -181,11 +161,11 @@ class CommonToolkit(QtGui.QWidget):
 	# 	self.tool_list.setCurrentRow(current_index - 1)
 	#
 	# 	# 实时保存json
-	# 	tools_list = self.read_json()
+	# 	tools_list = read_json()
 	# 	current_tool = tools_list[current_index]
 	# 	tools_list.pop(current_index)
 	# 	tools_list.insert(current_index - 1, current_tool)
-	# 	self.write_json(tools_list)
+	# 	write_json(tools_list)
 	#
 	# def down_btn_clicked(self):
 	# 	current_index = self.tool_list.currentRow()
@@ -194,36 +174,37 @@ class CommonToolkit(QtGui.QWidget):
 	# 	self.tool_list.setCurrentRow(current_index + 1)
 	#
 	# 	# 实时保存json
-	# 	tools_list = self.read_json()
+	# 	tools_list = read_json()
 	# 	current_tool = tools_list[current_index]
 	# 	tools_list.pop(current_index)
 	# 	tools_list.insert(current_index + 1, current_tool)
-	# 	self.write_json(tools_list)
+	# 	write_json(tools_list)
+
+	def py_btn_clicked(self):
+		self.add_py_win = AddPyWin()
+		self.add_py_win.show()
+		self.add_py_win.closed_sig.connect(self.py_win_closed)
+		self.add_py_win.exec_()
+
+	def py_win_closed(self):
+		if self.add_py_win.sender():
+			for list_index in xrange(self.tool_list.count()+1):
+				self.tool_list.takeItem(list_index)
+
+			# self.init_tools_list()
+
+		# todo: 这里删不干净，明天要改
+		# todo：python拖入nuke 自动执行
 
 	def list_double_clicked(self):
-		tools_list = self.read_json()
+		tools_list = read_json()
 		current_index = self.tool_list.currentRow()
 		tool_command = tools_list[current_index].get("command")
-		if tools_list[current_index].get("type") == "node":
-			nuke.createNode(tool_command)
-		elif tools_list[current_index].get("type") == "tool_set":
+
+		if tools_list[current_index].get("type") == "python":
+			execfile(tool_command.encode("gbk"))
+		else:
 			nuke.loadToolset(tool_command)
-
-	def read_json(self):
-		with open(self.config_path) as json_file:
-			json_str = json_file.read()
-			tools_list = json.loads(json_str)
-		return tools_list
-
-	def write_json(self, tools_list):
-		with open(self.config_path, "w") as json_file:
-			json_str = json.dumps(tools_list, ensure_ascii=False, indent=2)
-			json_file.write(json_str)
-
-	def get_style(self, style_name):
-		dirs = os.path.dirname(os.path.abspath(__file__))
-		style = open(os.path.join(dirs, "src/%s.txt" % style_name)).read()
-		return style
 
 
 class ToolsListWidget(QtGui.QListWidget):
@@ -238,8 +219,8 @@ class ToolsListWidget(QtGui.QListWidget):
 		self.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
 		self.setAcceptDrops(True)
 
-		# self.old_item_index.connect(self.old_index_sig)
-		# self.drop_item_sig.connect(self.drag_leave_create)
+	# self.old_item_index.connect(self.old_index_sig)
+	# self.drop_item_sig.connect(self.drag_leave_create)
 
 	def dragEnterEvent(self, event):
 		"""将所选择的item的index发射出去"""
@@ -248,11 +229,11 @@ class ToolsListWidget(QtGui.QListWidget):
 		global old_index
 		self.old_index = self.currentRow()
 
-		# self.old_item_index.emit(str(self.currentRow()))
+	# self.old_item_index.emit(str(self.currentRow()))
 
 	def dragMoveEvent(self, event):
 		"""修改拖拽时的minedata数据"""
-		tools_list = self.parent().read_json()
+		tools_list = read_json()
 		event.mimeData().setText(tools_list[self.currentRow()].get("command"))
 
 	# def old_index_sig(self):
@@ -265,24 +246,25 @@ class ToolsListWidget(QtGui.QListWidget):
 		event.setDropAction(QtCore.Qt.MoveAction)
 		super(ToolsListWidget, self).dropEvent(event)
 
-		tools_list = self.parent().read_json()
+		tools_list = read_json()
 		change_item = tools_list[self.old_index]
 		tools_list.pop(self.old_index)
 		tools_list.insert(self.currentRow(), change_item)
-		self.parent().write_json(tools_list)
+		write_json(tools_list)
 
 	# def dragLeaveEvent(self, event):
 	# 	self.drop_item_sig.emit(str(self.currentRow()))
 
 	# def drag_leave_create(self):
 	# 	"""节点被拖出窗口后创建预设"""
-	# 	tools_list = self.parent().read_json()
+	# 	tools_list = read_json()
 	# 	current_index = self.sender().currentRow()
 	# 	tool_command = tools_list[current_index].get("command")
 	# 	if tools_list[current_index].get("type") == "node":
 	# 		nuke.createNode(tool_command)
 	# 	elif tools_list[current_index].get("type") == "tool_set":
 	# 		nuke.loadToolset(tool_command)
+
 
 if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)

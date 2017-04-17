@@ -1,0 +1,1 @@
+pyside-uic AddPyWin.ui -o Ui_AddPyWin.py -x
