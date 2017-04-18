@@ -193,8 +193,6 @@ class CommonToolkit(QtGui.QWidget):
 
 			self.init_tools_list()
 
-		# todo：python拖入nuke 自动执行
-
 	def list_double_clicked(self):
 		tools_list = read_json()
 		current_index = self.tool_list.currentRow()
