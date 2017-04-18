@@ -12,7 +12,7 @@ from PySide import QtCore
 import nuke
 import nukescripts
 
-from config import config_dir, config_path, write_json, read_json, get_style
+from ctk_config import config_dir, config_path, write_json, read_json, get_style
 from AddPyWin import AddPyWin
 
 reload(sys)
@@ -69,7 +69,7 @@ class CommonToolkit(QtGui.QWidget):
 		# 右键菜单
 		if self.tool_list.currentItem():
 			self.list_menu = QtGui.QMenu()
-			self.list_menu.setStyleSheet(self.get_style("menu_style"))
+			self.list_menu.setStyleSheet(get_style("menu_style"))
 			menu_item = self.list_menu.addAction(u"删除")
 			self.connect(menu_item, QtCore.SIGNAL("triggered()"), self.menu_item_clicked)
 			parent_position = self.mapToGlobal(QtCore.QPoint(0, 0))
@@ -188,12 +188,11 @@ class CommonToolkit(QtGui.QWidget):
 
 	def py_win_closed(self):
 		if self.add_py_win.sender():
-			for list_index in xrange(self.tool_list.count()+1):
-				self.tool_list.takeItem(list_index)
+			while (self.tool_list.count() > 0):
+				self.tool_list.takeItem(0)
 
-			# self.init_tools_list()
+			self.init_tools_list()
 
-		# todo: 这里删不干净，明天要改
 		# todo：python拖入nuke 自动执行
 
 	def list_double_clicked(self):

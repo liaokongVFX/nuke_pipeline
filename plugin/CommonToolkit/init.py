@@ -4,5 +4,9 @@ __author__ = 'liaokong'
 
 from CommonToolkit import CommonToolkit
 from nukescripts import panels
+from PyDropping import PyDropping
+import nukescripts
+
+nukescripts.addDropDataCallback(PyDropping)
 
 panels.registerWidgetAsPanel('CommonToolkit', u'预设工具',"example.test.panel", True)
