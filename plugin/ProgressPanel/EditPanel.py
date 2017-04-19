@@ -224,6 +224,7 @@ class EditPanel(QtGui.QDialog, Ui_EditPanel):
 		artist_name = self.sender().add_button.text()
 
 		for i in self.detail_table.selectedIndexes():
+			# 获取表格中的对应的combobox
 			current_combo = self.detail_table.cellWidget(i.row(), self.get_header_index(u"artist"))
 			current_combo.setCurrentIndex(config.artists_list.index(artist_name))
 
