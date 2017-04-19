@@ -16,6 +16,11 @@ import configure.configure as config
 import Libs.pymongo as pymongo
 
 from Ui_EditPanel import Ui_EditPanel
+from SocketClient import MasterSocket
+from BatchChangeArtist import BatchChangeArtist
+
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 
 class EditPanel(QtGui.QDialog, Ui_EditPanel):
@@ -61,6 +66,7 @@ class EditPanel(QtGui.QDialog, Ui_EditPanel):
 		self.detail_table.setColumnWidth(7, 570)
 
 		self.project_list.currentItemChanged.connect(self.set_table_info)
+		self.batch_change_btn.clicked.connect(self.batch_change_btn_clicked)
 		self.client_pass.clicked.connect(self.client_pass_clicked)
 		self.client_no_pass.clicked.connect(self.client_no_pass_clicked)
 		self.detail_table.itemChanged.connect(self.item_change)
@@ -165,6 +171,7 @@ class EditPanel(QtGui.QDialog, Ui_EditPanel):
 			pass
 
 		if change_item != None:
+			print "change now"
 			change_item_header = config.db_progress_dataName[self.detail_table.horizontalHeaderItem(c).text()]
 
 			date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
@@ -175,16 +182,30 @@ class EditPanel(QtGui.QDialog, Ui_EditPanel):
 
 	def artist_comb_change(self):
 		"""当分配人员下拉菜单被修改后，实时写入数据库"""
+		date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 		current_comb_row = self.sender().property("row")
 		current_comb_col = self.sender().property("col")
 		current_comb = self.detail_table.cellWidget(current_comb_row, current_comb_col)
 		current_artist = config.artists_list[current_comb.currentIndex()]
-		date = time.strftime('%Y-%m-%d', time.localtime(time.time()))
 
+		# 通过current_artist找到对应ip并发送信息到对应的ip的电脑上去
+		current_artist_ip = config.artists_ip.get(current_artist)
+		current_project = self.detail_table.item(current_comb_row, self.get_header_index(u"project")).text()
+		current_shot = self.detail_table.item(current_comb_row, self.get_header_index(u"shot_name")).text()
+		current_frame = self.detail_table.item(current_comb_row, self.get_header_index(u"frame_len")).text()
+		current_grade = self.detail_table.item(current_comb_row, self.get_header_index(u"grade")).text()
+		send_message = u"你被分派了%s项目的 %s 镜头\n(时长：%s帧，镜头难度：%s)" % (
+			current_project, current_shot, current_frame, current_grade)
+
+		# 将修改的内如写入数据库
 		config.connect_mongo_progress.update(
 			{"shot_name": self.detail_table.item(current_comb_row, self.get_header_index(u"shot_name")).text()},
 			{"$set": {"artist": current_artist,
 					  "date": date}}, upsert=True)
+
+		# 向对应的ip电脑上发送消息
+		master_socket = MasterSocket(current_artist_ip, 5000, send_message)
+		master_socket.start()
 
 	def get_header_index(self, name):
 		# 获取头部名称序号
@@ -192,3 +213,25 @@ class EditPanel(QtGui.QDialog, Ui_EditPanel):
 			if config.db_progress_dataName[self.detail_table.horizontalHeaderItem(index).text()] == name:
 				self.shot_name_index = index
 		return self.shot_name_index
+
+	def batch_change_btn_clicked(self):
+		self.batch_change_artist = BatchChangeArtist()
+		self.batch_change_artist.show()
+		self.batch_change_artist.close_sig.connect(self.batch_change_close_sig)
+		self.exec_()
+
+	def batch_change_close_sig(self):
+		artist_name = self.sender().add_button.text()
+
+		for i in self.detail_table.selectedIndexes():
+			current_combo = self.detail_table.cellWidget(i.row(), self.get_header_index(u"artist"))
+			current_combo.setCurrentIndex(config.artists_list.index(artist_name))
+
+
+if __name__ == '__main__':
+	app = QtGui.QApplication(sys.argv)
+
+	e_panel = EditPanel()
+	e_panel.show()
+
+	app.exec_()

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'EditPanel.ui'
 #
-# Created: Wed Mar 08 13:44:48 2017
+# Created: Wed Apr 19 15:19:37 2017
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -19,6 +19,10 @@ class Ui_EditPanel(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
+        self.batch_change_btn = QtGui.QPushButton(EditPanel)
+        self.batch_change_btn.setMinimumSize(QtCore.QSize(100, 0))
+        self.batch_change_btn.setObjectName("batch_change_btn")
+        self.horizontalLayout.addWidget(self.batch_change_btn)
         self.client_pass = QtGui.QPushButton(EditPanel)
         self.client_pass.setObjectName("client_pass")
         self.horizontalLayout.addWidget(self.client_pass)
@@ -45,6 +49,7 @@ class Ui_EditPanel(object):
 
     def retranslateUi(self, EditPanel):
         EditPanel.setWindowTitle(QtGui.QApplication.translate("EditPanel", "Progress Panel", None, QtGui.QApplication.UnicodeUTF8))
+        self.batch_change_btn.setText(QtGui.QApplication.translate("EditPanel", "批量分派人员", None, QtGui.QApplication.UnicodeUTF8))
         self.client_pass.setText(QtGui.QApplication.translate("EditPanel", "客户通过", None, QtGui.QApplication.UnicodeUTF8))
         self.client_no_pass.setText(QtGui.QApplication.translate("EditPanel", "暂未通过", None, QtGui.QApplication.UnicodeUTF8))
 

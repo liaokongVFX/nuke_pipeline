@@ -97,8 +97,10 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 		# 设置客户通过颜色
 		client_pass_num = []
 		self.client_pass_list = [x.values()[0] for x in
-								 config.connect_mongo_progress.find({"client_pass": "pass"},
-																	{"shot_name": 1, "_id": 0})]
+								 config.connect_mongo_progress.find(
+									 {"$and": [{"project": sel_project}, {"client_pass": "pass"}]},
+									 {"shot_name": 1, "_id": 0})]
+		print self.client_pass_list
 
 		for r in xrange(0, self.detail_table.rowCount()):
 			for c in xrange(0, self.detail_table.columnCount()):
@@ -201,3 +203,12 @@ def start():
 	if start.pplanel.exec_() == QtGui.QDialog.Accepted:
 		start.EPanel = EditPanel()
 		start.EPanel.show()
+
+
+if __name__ == '__main__':
+	app = QtGui.QApplication(sys.argv)
+
+	p_panel = ProgressPanel()
+	p_panel.show()
+
+	app.exec_()

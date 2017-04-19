@@ -15,6 +15,9 @@ source_root_path = "Z:/Plates/"
 # 制作人员列表
 artists_list = [u"侯世鹏", u"郭伟", u"常亚茹"]
 
+# 制作人员对应ip的字典
+artists_ip = {artists_list[0]: "10.0.0.117", artists_list[1]: "10.0.0.118", artists_list[2]: "10.0.0.119"}
+
 # mongodb的ip及端口设置
 mongodb_ip = "10.0.0.117"
 mongodb_port = 27017
