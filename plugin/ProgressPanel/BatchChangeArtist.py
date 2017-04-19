@@ -26,6 +26,12 @@ class BatchChangeArtist(QtGui.QWidget):
 		self.setWindowTitle(u"批量分派")
 		self.resize(200, 500)
 
+		self.setStyleSheet("""
+			*{color:#fffff8;
+			font-family:宋体;
+			font-size:12px;}
+			""")
+
 		v_layout = QtGui.QVBoxLayout()
 		v_layout.setAlignment(QtCore.Qt.AlignCenter)
 		main_layout = QtGui.QVBoxLayout(self)
@@ -54,7 +60,7 @@ class BatchChangeArtist(QtGui.QWidget):
 if __name__ == '__main__':
 	app = QtGui.QApplication(sys.argv)
 
-	tw = TestWidget()
+	tw = BatchChangeArtist()
 	tw.show()
 
 	app.exec_()
