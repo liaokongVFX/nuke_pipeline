@@ -29,8 +29,8 @@ class BatchChangeArtist(QtGui.QWidget):
 		self.setStyleSheet("""
 			*{color:#fffff8;
 			font-family:宋体;
-			font-size:12px;}
-			""")
+			font-size:12px;
+			}""")
 
 		v_layout = QtGui.QVBoxLayout()
 		v_layout.setAlignment(QtCore.Qt.AlignCenter)
