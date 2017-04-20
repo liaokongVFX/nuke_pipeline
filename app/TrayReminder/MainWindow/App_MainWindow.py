@@ -89,6 +89,7 @@ class mainWindow(QtGui.QDialog, Ui_StrackDesktop):
 		self.tray_menu.addAction(self.quit_action)
 
 		self.tray_icon = QtGui.QSystemTrayIcon(self)
+		self.tray_icon.setIcon(QtGui.QIcon("kl.png"))
 		self.tray_icon.setContextMenu(self.tray_menu)
 
 	def create_action(self):
