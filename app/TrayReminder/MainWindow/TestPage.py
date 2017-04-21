@@ -229,6 +229,9 @@ class AddToolItem(QtGui.QListWidgetItem):
 				# 判断拖入的程序是否以存在
 				if get_true_name not in self.current_page_app:
 
+					if not os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)), "icon")):
+						os.mkdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), "icon"))
+
 					# 判断拖入的程序是否是exe程序
 					if self.make_icon(get_true_path, "icon/%s.ico" % link.split("/")[-1].split(".")[0]):
 						self.setText(link.split("/")[-1].split(".")[0].replace(" ", "\n"))
