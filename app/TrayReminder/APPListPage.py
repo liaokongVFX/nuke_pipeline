@@ -158,12 +158,10 @@ class ToolListWgt(QtGui.QListWidget):
 
 						apend_dict.pop(index_item)
 						apend_dict.insert(index_item, new_page_list)
-		print apend_dict
 
 		with open(TestPage.conf_path, "w") as json_file:
 			json_str = json.dumps(apend_dict, ensure_ascii=False, indent=2)
 			json_file.write(json_str)
-			print json_str
 
 	def double_clicked(self):
 		"""打开程序"""
