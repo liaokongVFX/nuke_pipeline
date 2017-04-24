@@ -7,6 +7,7 @@ QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))
 
 
 class MainUI(QDialog):
+	"""随便添加了一个，这个需要自行修改"""
 	def __init__(self, parent=None):
 		super(MainUI, self).__init__(parent)
 

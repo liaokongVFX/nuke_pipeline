@@ -130,11 +130,17 @@ class ToolListWgt(QtGui.QListWidget):
 			# 删除json中对应的数据
 			self.write_delete_json(current_item_name, self.objectName())
 
+			# 删除对应的图标
+			try:
+				os.remove(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+									   "icon\\%s.ico" % current_item_name.encode("gbk")))
+			except:
+				pass
+
 	def write_delete_json(self, current_item_name, widget_name):
 		"""删除json中对应的数据"""
 		apend_dict = read_json(TestPage.conf_path)
 
-		current_item_name = unicode(QtCore.QString(current_item_name).toUtf8(), 'utf-8', 'ignore')
 		widget_name = unicode(QtCore.QString(widget_name).toUtf8(), 'utf-8', 'ignore').split("_")[0]
 
 		for index_item, current_item in enumerate(apend_dict):
@@ -152,10 +158,12 @@ class ToolListWgt(QtGui.QListWidget):
 
 						apend_dict.pop(index_item)
 						apend_dict.insert(index_item, new_page_list)
+		print apend_dict
 
 		with open(TestPage.conf_path, "w") as json_file:
 			json_str = json.dumps(apend_dict, ensure_ascii=False, indent=2)
 			json_file.write(json_str)
+			print json_str
 
 	def double_clicked(self):
 		"""打开程序"""

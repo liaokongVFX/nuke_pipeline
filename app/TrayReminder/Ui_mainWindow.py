@@ -253,7 +253,7 @@ class Ui_StrackDesktop(object):
         StrackDesktop.setWindowTitle(_translate("StrackDesktop", "Quick Start", None))
         self.title_label.setText(_translate("StrackDesktop", "Quick Start", None))
 
-from TestPage import TestPage
+from APPListPage import TestPage
 import icons_rc
 import other_images_rc
 

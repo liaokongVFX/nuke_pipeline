@@ -11,7 +11,7 @@ from types import MethodType
 from PyQt4 import QtCore, QtGui
 
 from Ui_mainWindow import Ui_StrackDesktop
-from TestPage import TestPage
+from APPListPage import TestPage
 import config_page
 
 reload(sys)
