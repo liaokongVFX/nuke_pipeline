@@ -17,6 +17,12 @@ import config_page
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+dirs = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, dirs)
+
+import plugin.Libs.pymongo as pymongo
+import plugin.configure.configure as configure
+
 
 def implant_method(obj, func, func_name):
 	base_class = obj.__class__
@@ -49,7 +55,9 @@ class mainWindow(QtGui.QDialog, Ui_StrackDesktop):
 		self.setupUi(self)
 
 		self.setFixedSize(465, 850)
-		self.label.setText(os.path.expanduser('~').split("\\")[-1])
+
+		self.user_name = os.path.expanduser('~').split("\\")[-1]
+		self.label.setText(self.user_name)
 
 		# 隐藏边框
 		self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -77,6 +85,9 @@ class mainWindow(QtGui.QDialog, Ui_StrackDesktop):
 		self.create_tray()
 
 		self.tray_icon.show()
+
+		# 如果想自己去写用户名和对应的ip可以注释掉这句
+		self.getUserIp()
 
 		self.tray_icon.activated.connect(self.tray_double_click)
 		self.tray_icon.messageClicked.connect(self.message_clicked)
@@ -113,6 +124,22 @@ class mainWindow(QtGui.QDialog, Ui_StrackDesktop):
 
 	def message_clicked(self):
 		QtGui.QMessageBox.information(None, u"提示", message_data)
+
+	def getUserIp(self):
+		# 获取ip
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		try:
+			s.connect(('10.255.255.255', 0))
+			current_ip = s.getsockname()[0]
+		except:
+			current_ip = '127.0.0.1'
+		finally:
+			s.close()
+
+		# 输出用户名和ip到UserIp数据库中
+		configure.connect_mongo_ip.update(
+			{"ip": current_ip},
+			{"$set": {"ip": current_ip, "user_name": self.user_name}}, upsert=True)
 
 
 class SimpleServer(object):
