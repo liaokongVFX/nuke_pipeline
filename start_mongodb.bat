@@ -1,0 +1,1 @@
+mongod --dbpath F:\work\mongo_data
