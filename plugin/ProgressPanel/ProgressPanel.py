@@ -100,7 +100,6 @@ class ProgressPanel(QtGui.QDialog, Ui_ProgressPanel):
 								 config.connect_mongo_progress.find(
 									 {"$and": [{"project": sel_project}, {"client_pass": "pass"}]},
 									 {"shot_name": 1, "_id": 0})]
-		print self.client_pass_list
 
 		for r in xrange(0, self.detail_table.rowCount()):
 			for c in xrange(0, self.detail_table.columnCount()):
