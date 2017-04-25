@@ -13,15 +13,13 @@ from PyQt4 import QtCore, QtGui
 from Ui_mainWindow import Ui_StrackDesktop
 from APPListPage import TestPage
 import config_page
+import config
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-dirs = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, dirs)
-
-import plugin.Libs.pymongo as pymongo
-import plugin.configure.configure as configure
+import Libs.pymongo as pymongo
+import configure.configure as configure
 
 
 def implant_method(obj, func, func_name):

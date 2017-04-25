@@ -32,7 +32,7 @@ def connect_mongo_progress():
 def connect_mongo_ip():
 	# 连接 ip 数据库
 	mc = pymongo.MongoClient(host=config.mongodb_ip, port=config.mongodb_port)
-	db_ip = mc.UserIp
+	db_ip = mc.nuke
 	clo_userIpData = db_ip.userIpData
 
 	return clo_userIpData
