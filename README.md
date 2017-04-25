@@ -1,1 +1,1 @@
-readme改日重写 ⊙﹏⊙b
+详细项目介绍以及使用教程请查看[Wiki](https://github.com/liaokongVFX/nuke_pipeline/wiki/)。
