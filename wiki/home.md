@@ -8,3 +8,5 @@
 3. [部署](bushu.md)
 
 4. [使用教程](plugin.md)
+
+5. [写在后面的话](about.md)
