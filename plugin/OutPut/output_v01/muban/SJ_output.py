@@ -71,6 +71,8 @@ def SJ_output():
 	nuke.toNode(daliy_name)["file"].setValue(sample_path + sample_name)
 	nuke.toNode(daliy_name)["mov32_fps"].setValue(24)
 	nuke.toNode(daliy_name)["mov64_fps"].setValue(24)
+
+	# 渲染完成后自动导入渲染输出后的素材，并将数据写入数据库
 	nuke.toNode(daliy_name)["afterRender"].setValue(
 		"exec(open('%s').read());write_to_read();exec(open('%s').read());mongo_upsert();" % (writeToRead_path,
 																							 mongo_upsert_path))
