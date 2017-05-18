@@ -3,6 +3,6 @@ __date__ = '2017/5/18 15:14'
 __author__ = 'liaokong'
 
 import nuke
-import CreateNoExistentFolder
+from CreateNoExistentFolder import CreateNoExistentFolder
 
-nuke.addBeforeRender(CreateNoExistentFolder.CreateNoExistentFolder)
+nuke.addBeforeRender(CreateNoExistentFolder)
